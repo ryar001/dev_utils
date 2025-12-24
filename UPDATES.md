@@ -1,0 +1,25 @@
+Warnings:
+None
+
+What's New:
+- `logging_utils/logging_utils.py` (2025-12-24)
+  - Implemented `LoggingUtils` class for structured logging with `structlog`.
+  - Supports JSON and plain text output.
+  - Features asynchronous file rotation and dynamic context binding.
+  - Includes a comprehensive test suite for various logging scenarios.
+- `logging_utils/rotateHandler.py` (2025-12-24)
+  - Added `AsyncTimedRotatingFileHandler` and other asynchronous logging handlers for efficient log management.
+
+Chore:
+- `.gitignore` (2025-12-24)
+  - Configured to ignore common Python artifacts, build outputs, and virtual environments.
+- `.python-version` (2025-12-24)
+  - Set project Python version to 3.12.
+- `__version__.py` (2025-12-24)
+  - Added initial project version "0.0.1".
+- `main.py` (2025-12-24)
+  - Created a basic application entry point.
+- `pyproject.toml` (2025-12-24)
+  - Defined project metadata and dependencies, including `structlog`.
+- `uv.lock` (2025-12-24)
+  - Locked dependency versions for `dev-utils` and `structlog`.
