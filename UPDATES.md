@@ -1,3 +1,14 @@
+Documentation
+* Added AI Coding Assistant instructions (AGENT.md).
+* Updated README.md with installation instructions for dev-utils-jokerssd and detailed usage of Logging Utils.
+
+Features
+* Introduced new package dev_utils with exports for LoggingUtils, LogTagging, LogType, and AsyncTimedRotatingFileHandler (from dev_utils/__init__.py and dev_utils/logging_utils/__init__.py).
+
+Chore
+* Updated package version to 0.2.0 (__version__.py).
+* Configured pyproject.toml for building and distributing the dev-utils-jokerssd package.
+
 Warnings:
 None
 
