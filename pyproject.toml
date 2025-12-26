@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dev-utils-jokerssd"
-version = "0.3.0"
+version = "0.4.0"
 description = "Development utilities with structured logging"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -14,6 +14,8 @@ authors = [
 ]
 dependencies = [
     "structlog>=25.5.0",
+    "requests",
+    "aiohttp",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -23,3 +25,8 @@ classifiers = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["dev_utils"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]

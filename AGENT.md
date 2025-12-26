@@ -58,12 +58,11 @@
 - Use FastAPI for building APIs.
 - NiceGUI for frontend
 - Use SQLModel for ORM.
-- Use pydantic_ai for llm agent creation
 - Use langgraph for llm agent orchestration
 
 **Testing & Reliability**
 - Place tests in the `/tests` directory, mirroring the main project structure.
-- All tests must use `pytest`.
+- All tests must use `uv run pytest`.
 - For each feature or change, write tests covering:
     - The expected use case.
     - At least one edge case.

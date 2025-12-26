@@ -1,3 +1,26 @@
+2025-12-26
+
+What's New:
+  - dev_utils/lark_wrapper/messege_lark.py
+    - Implemented Lark messaging functionality with the LarkRelated class.
+  - dev_utils/lark_wrapper/msg_bot.py
+    - Introduced the MsgBot class for a unified messaging interface.
+  - dev_utils/lark_wrapper/sheet_utils.py
+    - Added the LarkSheetAPI class for interacting with Lark sheets.
+  - tests/test_msg_bot.py
+    - Added unit tests for the new MsgBot.
+
+Refactor:
+  - AGENT.md
+    - Removed an outdated testing instruction.
+
+Configuration:
+  - pyproject.toml
+    - Added 'requests' and 'aiohttp' to dependencies.
+    - Added 'pytest' to dev dependencies.
+  - uv.lock
+    - Updated lock file to reflect dependency changes.
+
 Documentation
 * Added AI Coding Assistant instructions (AGENT.md).
 * Updated README.md with installation instructions for dev-utils-jokerssd and detailed usage of Logging Utils.
