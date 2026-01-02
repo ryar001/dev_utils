@@ -1,3 +1,7 @@
+What's New
+  README.md
+    - Add comprehensive documentation for the Lark wrapper, including usage examples and feature highlights.
+
 Warnings:
 None
 

@@ -45,3 +45,42 @@ except ZeroDivisionError:
 -   **Log Rotation**: Automatically rotates log files daily (default).
 -   **Context Binding**: Bind global context variables (like `request_id` or `user_id`) to all logs.
 -   **Standard API**: Compatible with standard python `logging` (mostly) and `structlog`.
+
+## Lark Wrapper
+
+A wrapper for interaction with Lark/Feishu bots, providing strong typing and error handling.
+
+### Usage
+
+```python
+from dev_utils.lark_wrapper import MsgBot, BotType, MsgType, BotStatus
+
+# Initialize the bot
+bot = MsgBot(
+    chat_id="your-chat-id",
+    url="https://open.larksuite.com/open-apis",
+    api_name="bot/v2/hook/",
+    bot_type=BotType.LARK
+)
+
+# Send a text message
+response = bot.send_cust_bot_msg(
+    message="Hello, World!",
+    msg_type=MsgType.TEXT,
+    title="Notification"
+)
+
+# Check response
+if response.status == BotStatus.OK:
+    print("Success:", response.msg)
+else:
+    print("Failed:", response.errors)
+```
+
+### Features
+
+-   **Strong Typing**: Uses `BotStatus`, `BotType`, and `BotResponse` for predictable API interactions.
+-   **Multi-Platform Support**: Extensible design (currently supports Lark).
+-   **Async Support**: `async_send_msg` available for non-blocking operations.
+-   **Rich Content**: Supports Post/Rich Text messages via `MsgType.POST`.
+
