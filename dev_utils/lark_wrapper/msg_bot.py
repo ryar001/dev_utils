@@ -1,5 +1,6 @@
 from .messege_lark import LarkRelated
-from typing import Dict
+from .const import BotStatus, BotType
+from .model import BotResponse
 
 class MsgBot:    
     '''
@@ -17,8 +18,9 @@ class MsgBot:
         msg_bot_dict (dict): A dictionary of messaging bot instances for different platforms.
 
     '''
-    def __init__(self,chat_id="", url="",api_name="",pre_text="",msg_type="",json_fp="",title="",**kwargs):
-        self.chat_id_dict = chat_id
+    def __init__(self,chat_id="", url="",api_name="",pre_text="",msg_type="",json_fp="",title="",bot_type=BotType.LARK,**kwargs):
+        self.chat_id = chat_id
+        self.bot_type = bot_type or BotType.LARK
         self.url = url
         self.api_name = api_name
         self.pre_text = pre_text
@@ -26,24 +28,23 @@ class MsgBot:
         self.json_fp = json_fp
         self.title = title
         self.msg_bot_dict = {
-            "lark" : LarkRelated(chat_id=self.chat_id_dict, url=self.url,api_name=self.api_name,
+            BotType.LARK: LarkRelated(chat_id=self.chat_id, url=self.url,api_name=self.api_name,
                                         pre_text=self.pre_text,msg_type=self.msg_type,title=self.title,**kwargs)
         }
 
-    def send_msg(self,message="",chat_id="", url="",api_name="",pre_text="",msg_type="",msg_bot="lark",title="",**kwargs)->Dict:
+    def send_cust_bot_msg(self,message="",chat_id="", url="",api_name="",pre_text="",msg_type="",title="",msg_bot=BotType.LARK,**kwargs) -> BotResponse:
+        msg_bot = msg_bot or self.bot_type or BotType.LARK
+
         try:
-            self.msg_bot_dict[msg_bot].send_msg(message=message,chat_id=chat_id, url=url,api_name=api_name, pre_text=pre_text,msg_type=msg_type,title=title,**kwargs)
+            return self.msg_bot_dict[msg_bot].send_cust_bot_msg(message=message,chat_id=chat_id, url=url,api_name=api_name, pre_text=pre_text,msg_type=msg_type,title=title,**kwargs)
         except Exception as err:
             print(f"Failed to send message: {err}")
-            return {"success":False, "err":err}
-
-        return {"success":True, "err":""}
+            return BotResponse(status=BotStatus.FAILED, msg="", errors=str(err))
     
-    async def async_send_msg(self,message="",chat_id="", url="",api_name="",pre_text="",msg_type="",msg_bot="lark",title="",**kwargs)->Dict:
+    async def async_send_msg(self,message="",chat_id="", url="",api_name="",pre_text="",msg_type="",title="",msg_bot=BotType.LARK,**kwargs) -> BotResponse:
+        msg_bot = msg_bot or self.bot_type or BotType.LARK
         try:
-            self.msg_bot_dict[msg_bot].send_msg(message=message,chat_id=chat_id, url=url,api_name=api_name, pre_text=pre_text,msg_type=msg_type,title=title,is_async=True,**kwargs)
+            return await self.msg_bot_dict[msg_bot].send_cust_bot_msg(message=message,chat_id=chat_id, url=url,api_name=api_name, pre_text=pre_text,msg_type=msg_type,title=title,is_async=True,**kwargs)
         except Exception as err:
             print(f"Failed to send message: {err}")
-            return {"success":False, "err":err}
-
-        return {"success":True, "err":""}
+            return BotResponse(status=BotStatus.FAILED, msg="", errors=str(err))

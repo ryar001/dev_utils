@@ -1,3 +1,32 @@
+Warnings:
+None
+
+What's New:
+- Added new enums for message types, bot statuses, and bot types in `dev_utils/lark_wrapper/const.py`.
+- Introduced a `BotResponse` dataclass for structured API responses in `dev_utils/lark_wrapper/model.py`.
+- Created a new test file `tests/verify_refactor.py` for Lark-related functionalities.
+
+Refactor/Improvements:
+- `dev_utils/lark_wrapper/messege_lark.py`:
+    - Refactored message sending logic into a private `_send_msg` method for improved error handling and reusability.
+    - Enhanced `send_cust_bot_msg` to support `title` and additional `kwargs`, returning an `asyncio.Task`.
+- `dev_utils/lark_wrapper/msg_bot.py`:
+    - Enhanced `MsgBot` to support different bot types (e.g., Lark) and improved initialization.
+    - Added asynchronous message sending capability via `async_send_msg`.
+- `tests/test_msg_bot.py`:
+    - Updated tests to utilize new enums and configured `chat_id` from `.test_settings.toml`.
+    - Added tests for new message types and asynchronous sending.
+
+Dependency Updates:
+- `pyproject.toml`: Added `pydantic-gsheets` and `pydantic[email]` to dependencies.
+- `uv.lock`: Updated to reflect new and existing dependencies, including significant additions for Google APIs, Pydantic, and related libraries.
+
+Configuration:
+- `.gitignore`: Added `.pytest_cache/` and `.test_settings.toml` to the ignore list.
+
+Removals:
+- `AGENT.md`: Removed the file.
+
 2025-12-26
 
 What's New:

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dev-utils-jokerssd"
-version = "0.4.0"
+version = "0.4.1"
 description = "Development utilities with structured logging"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -16,6 +16,8 @@ dependencies = [
     "structlog>=25.5.0",
     "requests",
     "aiohttp",
+    "pydantic-gsheets>=0.0.8",
+    "pydantic[email]>=2.11.10",
 ]
 classifiers = [
     "Programming Language :: Python :: 3",

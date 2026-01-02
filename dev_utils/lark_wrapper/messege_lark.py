@@ -2,7 +2,8 @@ import requests
 import asyncio
 from typing import Dict,List
 import json
-
+from .const import MsgType, BotStatus
+from .model import BotResponse
 
 def escape_special_characters(input_data):
     # Convert the input data to a JSON string
@@ -116,22 +117,30 @@ class LarkRelated:
         }
         return rtf_json
 
-    def _send_msg(self,message,chat_id="", url="",api_name="",pre_text="",msg_type="",**kwargs):
+    def _send_msg(self,message,chat_id="", url="",api_name="",pre_text="",msg_type="",**kwargs) -> BotResponse:
         input_params = self.get_params(chat_id=chat_id,msg_type=msg_type,
                                        url=url,api_name=api_name,pre_text=pre_text)
         # headers = {"Content-Tpye": "application/json"}
         headers = {"Content-Type": "application/json"}
         url = f"{input_params['url']}/{input_params['api_name']}/{input_params['chat_id']}"
         params = self.get_msg_format(message,input_params['msg_type'],input_params['pre_text'],**kwargs)
-        response = requests.post(url=url, json=params, headers=headers,timeout=5)
-        return response.json()
+        try:
+            response = requests.post(url=url, json=params, headers=headers,timeout=5)
+            response_json = response.json()
+            
+            if response_json.get("code") == 0:
+                return BotResponse(status=BotStatus.OK, msg=json.dumps(response_json))
+            else:
+                return BotResponse(status=BotStatus.FAILED, msg="", errors=json.dumps(response_json))
+        except Exception as e:
+            return BotResponse(status=BotStatus.FAILED, msg="", errors=str(e))
 
     # TODO: change to a decorator
-    def send_msg(self,message="",chat_id="", url="",api_name="",pre_text="",msg_type="",title="",**kwargs):
+    def send_cust_bot_msg(self,message="",chat_id="", url="",api_name="",pre_text="",msg_type:MsgType="",title="",**kwargs) -> BotResponse | asyncio.Task:
         chat_id = self.chat_id if not chat_id else chat_id
         url = self.url if not url else url
         api_name = self.api_name if not api_name else api_name
-        msg_type = self.msg_type if not msg_type else msg_type
+        msg_type = msg_type or self.msg_type or MsgType.TEXT
 
         if kwargs:
             try:
@@ -147,7 +156,7 @@ class LarkRelated:
         is_async = kwargs.get("is_async", self.is_async)
         if not is_async:
             return self._send_msg(message,chat_id=chat_id, url=url,api_name=api_name,pre_text=pre_text,msg_type=msg_type,title=title,**kwargs)
-        asyncio.create_task(self._send_msg(message, chat_id=chat_id, url=url, api_name=api_name, pre_text=pre_text, msg_type=msg_type,title=title,**kwargs))
+        return asyncio.create_task(self._send_msg(message, chat_id=chat_id, url=url, api_name=api_name, pre_text=pre_text, msg_type=msg_type,title=title,**kwargs))
 
 if __name__=="__main__":
     alert_chat_id: str = "333a6d49-8c8d-443d-b856-e1ac8fb6dbef"  # chat id to post msg in
@@ -156,4 +165,5 @@ if __name__=="__main__":
     alert_pretext: str = "自动平仓机制"  # the title
     alert_msg_type: str = "post"  # msg format, text or
     alert_msg_bot = LarkRelated(chat_id=alert_chat_id, url=alert_url,api_name=alert_api_name,msg_type=alert_msg_type,title="test title")
-    alert_msg_bot.send_msg(more_content = [[{'tag':"text",'text':"Start running auto_flatten for fundingrate strategy ...\n"}],[{'tag':"at",'user_id':'all'}]  ])
+    resp = alert_msg_bot.send_cust_bot_msg(more_content = [[{'tag':"text",'text':"Start running auto_flatten for fundingrate strategy ...\n"}],[{'tag':"at",'user_id':'all'}]  ])
+    print(resp)

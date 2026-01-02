@@ -1,18 +1,30 @@
 
 import unittest
 from unittest.mock import patch, MagicMock
+from pathlib import Path
+import tomllib
 from dev_utils.lark_wrapper.msg_bot import MsgBot
+from dev_utils.lark_wrapper.const import BotStatus,MsgType,BotType
+from dev_utils.lark_wrapper.model import BotResponse
 
 class TestMsgBot(unittest.TestCase):
     def setUp(self):
-        self.chat_id = "ddbfd7a4-7185-45c1-9da1-996dcab9b443"
+        # Load chat_id from .test_settings.toml
+        config_path = Path(__file__).parent / ".test_settings.toml"
+        self.chat_id = ""
+        if config_path.exists():
+            with open(config_path, "rb") as f:
+                config = tomllib.load(f)
+                self.chat_id = config.get("lark_wrapper", {}).get("chat_id", "")
+
         self.api_name = "/bot/v2/hook/"
         self.url = "https://open.larksuite.com/open-apis"
         self.msg_bot = MsgBot(
             chat_id=self.chat_id,
             api_name=self.api_name,
             url=self.url,
-            msg_type="text"
+            msg_type=MsgType.TEXT,
+            bot_type=BotType.LARK
         )
 
     @patch('dev_utils.lark_wrapper.messege_lark.requests.post')
@@ -23,10 +35,12 @@ class TestMsgBot(unittest.TestCase):
         mock_post.return_value = mock_response
 
         message = "Test message"
-        result = self.msg_bot.send_msg(message=message)
+
+        result = self.msg_bot.send_cust_bot_msg(message=message)
 
         # Assertions
-        self.assertTrue(result["success"])
+        self.assertIsInstance(result, BotResponse)
+        self.assertEqual(result.status, BotStatus.OK)
         
         expected_url = f"{self.url}/{self.api_name}/{self.chat_id}"
         
@@ -58,9 +72,10 @@ class TestMsgBot(unittest.TestCase):
 
         message = "Test post message"
         title = "Test Title"
-        result = self.msg_bot.send_msg(message=message, msg_type="post", title=title)
+        result = self.msg_bot.send_cust_bot_msg(message=message, msg_type="post", title=title)
         
-        self.assertTrue(result["success"])
+        self.assertIsInstance(result, BotResponse)
+        self.assertEqual(result.status, BotStatus.OK)
         
         args, kwargs = mock_post.call_args
         self.assertEqual(kwargs['json']['msg_type'], "post")
@@ -77,18 +92,18 @@ class TestMsgBot(unittest.TestCase):
         message = "This is a live test message from the automated test suite."
         title = "Live Test"
         
-        # Real call to MsgBot.send_msg (no mocking)
+        # Real call to MsgBot.send_cust_bot_msg (no mocking)
         # Note: This uses the chat_id and url defined in setUp
-        result = self.msg_bot.send_msg(message=message, title=title)
+        result = self.msg_bot.send_cust_bot_msg(message=message, title=title, msg_bot=BotType.LARK,msg_type=MsgType.TEXT)
         
         print(f"Live send result: {result}")
         
         # Verify result structure and success
-        self.assertIsInstance(result, dict)
+        self.assertIsInstance(result, BotResponse)
         
         # Allow for API errors if credentials are invalid, but ensure we got a response dict
-        if result.get("success"):
-            self.assertTrue(result["success"])
+        if result.status == BotStatus.OK:
+            self.assertEqual(result.status, BotStatus.OK)
         else:
             # If it fails (e.g. invalid chat_id), it might return success=False
             print(f"Live test failed: {result}")
