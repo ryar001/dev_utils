@@ -48,7 +48,7 @@ except ZeroDivisionError:
 
 ## Lark Wrapper
 
-A wrapper for interaction with Lark/Feishu bots, providing strong typing and error handling.
+A wrapper for interaction with Lark/Feishu Custom bots, providing strong typing and error handling.
 
 ### Usage
 

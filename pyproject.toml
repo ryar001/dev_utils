@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dev-utils-jokerssd"
-version = "0.5.0"
+version = "0.5.1"
 description = "Development utilities with structured logging"
 readme = "README.md"
 requires-python = ">=3.12"
