@@ -24,6 +24,7 @@ class LarkRelated:
     def get_params(self,**kwargs):
         ''''''
         output={}
+
         for key,val in kwargs.items():
             if val or val == 0:
                 output[key] = val
@@ -119,8 +120,9 @@ class LarkRelated:
 
     def _send_msg(self,message,chat_id="", url="",api_name="",pre_text="",msg_type="",**kwargs) -> BotResponse:
         input_params = self.get_params(chat_id=chat_id,msg_type=msg_type,
-                                       url=url,api_name=api_name,pre_text=pre_text)
+                                       url=url,api_name=api_name,pre_text=pre_text,title=kwargs.get("title",self.title))
         # headers = {"Content-Tpye": "application/json"}
+
         headers = {"Content-Type": "application/json"}
         url = f"{input_params['url']}/{input_params['api_name']}/{input_params['chat_id']}"
         params = self.get_msg_format(message,input_params['msg_type'],input_params['pre_text'],**kwargs)
@@ -142,16 +144,19 @@ class LarkRelated:
         api_name = self.api_name if not api_name else api_name
         msg_type = msg_type or self.msg_type or MsgType.TEXT
 
-        if kwargs:
-            try:
-                pre_text = (self.pre_text if not pre_text else pre_text or "").format(**kwargs)
-            except KeyError:
-                pre_text = (self.pre_text if not pre_text else pre_text or "")
-            try:
-                title = (self.title if not title else title or "").format(**kwargs)
-            except KeyError:
-                title = (self.title if not title else title or "")
+
+        try:
+            pre_text = (self.pre_text if not pre_text else pre_text or "").format(**kwargs)
+        except KeyError:
+            pre_text = (self.pre_text if not pre_text else pre_text or "")
+        try:
+            title = (self.title if not title else title or "").format(**kwargs)
+        except KeyError:
+            title = (self.title if not title else title or "")
         
+        
+        if title and msg_type == MsgType.TEXT:
+            msg_type = MsgType.POST
         
         is_async = kwargs.get("is_async", self.is_async)
         if not is_async:

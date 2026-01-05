@@ -72,6 +72,7 @@ class TestMsgBot(unittest.TestCase):
 
         message = "Test post message"
         title = "Test Title"
+
         result = self.msg_bot.send_cust_bot_msg(message=message, msg_type="post", title=title)
         
         self.assertIsInstance(result, BotResponse)
@@ -91,10 +92,10 @@ class TestMsgBot(unittest.TestCase):
         print("\\nRunning live test...")
         message = "This is a live test message from the automated test suite."
         title = "Live Test"
-        
+
         # Real call to MsgBot.send_cust_bot_msg (no mocking)
         # Note: This uses the chat_id and url defined in setUp
-        result = self.msg_bot.send_cust_bot_msg(message=message, title=title, msg_bot=BotType.LARK,msg_type=MsgType.TEXT)
+        result = self.msg_bot.send_cust_bot_msg(message=message, title=title, msg_bot=BotType.LARK,msg_type=MsgType.POST)
         
         print(f"Live send result: {result}")
         

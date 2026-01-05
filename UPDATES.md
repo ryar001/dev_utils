@@ -1,3 +1,16 @@
+2026-01-05
+
+**What's New**
+- `dev_utils/lark_wrapper/const.py`: Added `POST` member to `MsgType` enum.
+- `dev_utils/lark_wrapper/messege_lark.py`: Enabled sending `POST` type messages via `send_cust_bot_msg` when a title is present for `TEXT` messages.
+- `tests/test_msg_bot.py`: Added a test case for `send_cust_bot_msg` with `MsgType.POST`.
+
+**Bugfix**
+- `dev_utils/lark_wrapper/messege_lark.py`: Enhanced `send_cust_bot_msg` to gracefully handle `KeyError` during dynamic message formatting (pre_text, title), preventing failures when template variables are missing.
+
+**Dependencies**
+- `uv.lock`: Updated dependencies.
+
 Warnings: None
 
 What's New

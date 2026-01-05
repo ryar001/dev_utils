@@ -2,6 +2,7 @@ from enum import StrEnum
 
 class MsgType(StrEnum):
     TEXT = "text"
+    POST = "post"
     IMAGE = "image"
     INTERACTIVE = "interactive"
     AUDIO = "audio"
